@@ -1,35 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+function View({ count, money, vip, name }) {
+  return (
+    <div>
+      <div>view name is {name}</div>
+      <div>i have count {count}</div>
+      <div>i have money: {money}</div>
+      <div>vip: {vip ? "i am vip" : "i not vip"}</div>
+    </div>
+  );
+}
+
+function View2({ count, money, vip, name, onChangeName }) {
+  const handleChange = (event) => {
+    const text = event.target.value;
+    onChangeName(text);
+  };
+
+  return (
+    <div>
+      <div>view2 name is {name}</div>
+      <div>i have count {count}</div>
+      <div>i have money: {money}</div>
+      <div>vip: {vip ? "i am vip" : "i not vip"}</div>
+      <input onChange={handleChange} placeholder="change view name" />
+    </div>
+  );
+}
+
+function Container() {
+  // hooks
+  const [count, setCount] = useState(0);
+  const [name, setName] = useState("nick");
+
+  const handleClick = () => {
+    setCount(count + 1);
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div>num: {count}</div>
+      <View money={2} name={name} vip count={count} />
+      <View2 money={2} onChangeName={setName} name="hello" vip count={count} />
+      <button onClick={handleClick}>add count</button>
     </>
-  )
+  );
 }
 
-export default App
+function App() {
+  return <Container />;
+}
+
+export default App;
