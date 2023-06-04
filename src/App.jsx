@@ -1,54 +1,84 @@
 import { useState } from "react";
+import { PRODUCTS } from "./data";
 
-function View({ count, money, vip, name }) {
-  return (
-    <div>
-      <div>view name is {name}</div>
-      <div>i have count {count}</div>
-      <div>i have money: {money}</div>
-      <div>vip: {vip ? "i am vip" : "i not vip"}</div>
-    </div>
-  );
-}
-
-function View2({ count, money, vip, name, onChangeName }) {
+function SearchBar({ search, onSearch, isStock, setStock }) {
   const handleChange = (event) => {
-    const text = event.target.value;
-    onChangeName(text);
+    onSearch(event.target.value.toLocaleLowerCase());
+  };
+
+  const handleChangeCheckbox = (event) => {
+    setStock(event.target.checked);
   };
 
   return (
     <div>
-      <div>view2 name is {name}</div>
-      <div>i have count {count}</div>
-      <div>i have money: {money}</div>
-      <div>vip: {vip ? "i am vip" : "i not vip"}</div>
-      <input onChange={handleChange} placeholder="change view name" />
+      <input value={search} onChange={handleChange} placeholder="Search..." />
+      <div>
+        <label>
+          <input
+            value={isStock}
+            onChange={handleChangeCheckbox}
+            type="checkbox"
+          />{" "}
+          Only show products in stock
+        </label>
+      </div>
     </div>
   );
 }
 
-function Container() {
-  // hooks
-  const [count, setCount] = useState(0);
-  const [name, setName] = useState("nick");
-
-  const handleClick = () => {
-    setCount(count + 1);
-  };
-
+function ProductRow({ name, price }) {
   return (
-    <>
-      <div>num: {count}</div>
-      <View money={2} name={name} vip count={count} />
-      <View2 money={2} onChangeName={setName} name="hello" vip count={count} />
-      <button onClick={handleClick}>add count</button>
-    </>
+    <div>
+      <span style={{ width: "140px", display: "inline-block" }}>{name}</span>
+      <span>{price}</span>
+    </div>
   );
 }
 
-function App() {
-  return <Container />;
+function ProductTable({ search, isStock, products }) {
+  const fruits = [];
+  const vegetables = [];
+  products.forEach((item) => {
+    if (isStock && !item.stocked) {
+      return;
+    }
+    if (search !== "" && item.name.toLocaleLowerCase().indexOf(search) === -1) {
+      return;
+    }
+    if (item.category === "Fruits") {
+      fruits.push(<ProductRow key={item.name} {...item} />);
+    } else {
+      vegetables.push(<ProductRow key={item.name} {...item} />);
+    }
+  });
+
+  return (
+    <div>
+      <h2>Fruits</h2>
+      {fruits}
+      <h2>Vegetables</h2>
+      {vegetables}
+    </div>
+  );
 }
 
-export default App;
+function FilterableProductTable({ products }) {
+  const [search, setSearch] = useState("");
+  const [isStock, setStock] = useState(false);
+  return (
+    <div>
+      <SearchBar
+        search={search}
+        onSearch={setSearch}
+        isStock={isStock}
+        setStock={setStock}
+      />
+      <ProductTable isStock={isStock} search={search} products={products} />
+    </div>
+  );
+}
+
+export default function App() {
+  return <FilterableProductTable products={PRODUCTS} />;
+}
