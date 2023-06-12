@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import { List } from "./List";
+import { SearchBar } from "./SearchBar";
 
-function App() {
-  const [count, setCount] = useState(0)
+const defaultData = [
+  {
+    id: "1fjdklsafk",
+    title: "Hit the gym",
+    completed: false,
+  },
+  {
+    id: "2",
+    title: "Pay bills",
+    completed: true,
+  },
+  {
+    id: "3",
+    title: "Meet George",
+    completed: false,
+  },
+];
+
+// 引用对象: 数组,函数,对象
+// 值对象: 字符串,boolean,数字
+
+export default function App() {
+  const [data, setData] = useState(defaultData);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app">
+      <SearchBar setData={setData} />
+      <List data={data} setData={setData} />
+    </div>
+  );
 }
-
-export default App
