@@ -1,6 +1,9 @@
+import bodyParser from "body-parser";
 import express from "express";
+import fs from "fs";
 
 const app = express(); // 构造函数
+app.use(bodyParser.json());
 const port = 3001;
 
 // RESTFul 规范
@@ -18,7 +21,13 @@ app.get("/api/ping", (req, res) => {
 
 // URL
 app.post("/api/register", (req, res) => {
-  res.send("hello world 1");
+  const fileName = `./accounts/${req.body.username}`;
+  if (fs.existsSync(fileName)) {
+    res.send({ error: "Username is registed" });
+    return;
+  }
+  fs.writeFileSync(fileName, JSON.stringify(req.body));
+  res.send({ success: true });
 });
 
 app.post("/api/login", (req, res) => {

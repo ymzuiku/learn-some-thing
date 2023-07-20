@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 /*
-XHR (ajax, 浏览器标准)
+XHR (XMLHttpRequest, ajax, 浏览器标准)
 fetch (浏览器标准+nodejs标准)
 axios (用的最多的请求库, XHR, http)
 www.baidu.com host
@@ -18,28 +18,40 @@ export function Register({ goBack }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // if (!username) {
-    //   alert("please input username");
-    //   return;
-    // }
-    // if (!password) {
-    //   alert("please input password");
-    //   return;
-    // }
-    // if (password !== passwordAgain) {
-    //   alert("password no equal");
-    //   return;
-    // }
+    if (!username) {
+      alert("please input username");
+      return;
+    }
+    if (!password) {
+      alert("please input password");
+      return;
+    }
+    if (password !== passwordAgain) {
+      alert("password no equal");
+      return;
+    }
 
-    fetch("/api/register", {
+    // Promise
+    const data = await fetch("/api/register", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         username,
         password,
       }),
+    }).then((response) => {
+      return response.json();
     });
+
+    if (data.success) {
+      alert("You success!");
+    } else if (data.error) {
+      alert(data.error);
+    }
   };
   return (
     <div className="login-box">
