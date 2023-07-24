@@ -32,6 +32,8 @@ app.post("/api/register", (req, res) => {
 
 app.post("/api/login", (req, res) => {
   res.send("hello world 2");
+  // const buff = fs.readFileSync('...')
+  // const text = String(buff);
 });
 
 app.listen(port, () => {
